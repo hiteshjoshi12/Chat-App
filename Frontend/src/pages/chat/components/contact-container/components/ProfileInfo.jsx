@@ -7,15 +7,15 @@ import {
 } from "@/components/ui/tooltip";
 import { getColor } from "@/lib/utils";
 import { useAppStore } from "@/store";
-import React from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { IoPower } from "react-icons/io5";
 import { apiFrontend } from "@/lib/apiFrontend";
-import { LOGOUT_ROUTE } from "@/utils/constants";
+import { HOST, LOGOUT_ROUTE } from "@/utils/constants";
 
 const ProfileInfo = () => {
   const { userInfo, setUserInfo } = useAppStore();
+  console.log(userInfo.Image)
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -39,9 +39,9 @@ const ProfileInfo = () => {
       <div className="flex gap-3 items-center justify-center ">
         <div className="w-12 h-12 relative">
           <Avatar className="w-12 h-12 rouded-full overflow-hidden">
-            {userInfo.image ? (
+            {userInfo.Image ? (
               <AvatarImage
-                src={image}
+              src={`${HOST}/${userInfo.Image}`}
                 alt="profile"
                 className="object-cover w-full h-full bg-black"
               />

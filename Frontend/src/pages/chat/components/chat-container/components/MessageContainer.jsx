@@ -8,7 +8,6 @@ const MessageContainer = () => {
   const {
     selectedChatType,
     selectedChatData,
-    userInfo,
     selectedChatMessages,
     setSelectedChatMessages,
   } = useAppStore();

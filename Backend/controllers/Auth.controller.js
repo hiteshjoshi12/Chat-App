@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/User.model.js";
+import { renameSync, unlinkSync } from "fs";
 
 const maxAge = 3 * 24 * 60 * 60 * 1000; // 3 days
 
@@ -115,19 +116,76 @@ export const updateProfile = async (req, res, next) => {
   );
 
   return res.status(200).json({
-    id: userData._id,
+    id: userData.id,
     email: userData.email,
     profileSetup: userData.profileSetup,
     firstName: userData.firstName,
     lastName: userData.lastName,
     color: userData.color,
-    Image: userData.Image,
+    image: userData.image,
   });
+};
+
+export const addProfileImage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send("File is required");
+    }
+
+    const date = Date.now();
+    console.log(date);
+
+    // Define the new file name with path
+    const fileName = "uploads/profiles/" + date + req.file.originalname;
+
+    // Check if req.file.path exists before renaming
+    if (!req.file.path) {
+      return res.status(400).send("File path is missing");
+    }
+
+    // Rename the file
+    renameSync(req.file.path, fileName);  // Correctly pass the old path and new path
+
+    // Update the user's profile image path in the database
+    const updatedUser = await User.findByIdAndUpdate(
+      req.userId,
+      { Image: fileName },
+      { runValidators: true }
+    );
+
+    return res.status(200).json({
+      Image: updatedUser.Image,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
+export const removeProfileImage = async (req, res, next) => {
+  const { userId } = req;
+  
+  const user = await User.findById(userId);
+
+  if(!user){
+    return res.status(400).send("User Not Found");
+  }
+  
+  if(user.Image){
+    unlinkSync(user.Image)
+  }
+
+  user.Image = null;
+  await user.save(); 
+
+ 
+
+  return res.status(200).send("Profile Image removed!");
 };
 
 export const logout = async (req, res, next) => {
   try {
     res.cookie("jwt", "", { maxAge: 1, secure: true, sameSite: "none" });
-    res.status(200).send("Logout Succesfull")
+    res.status(200).send("Logout Succesfull");
   } catch (error) {}
 };

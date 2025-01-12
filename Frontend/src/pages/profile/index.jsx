@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import { apiFrontend } from "@/lib/apiFrontend";
 import {
   ADD_PROFILE_IMAGE_ROUTE,
+  HOST,
+  REMOVE_PROFILE_IMAGE_ROUTE,
   UPDATE_PROFILE_ROUTE,
 } from "@/utils/constants";
 
@@ -29,6 +31,10 @@ const Profile = () => {
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setSelectedColor(userInfo.color);
+
+    }
+    if(userInfo.Image){
+      setImage(`${HOST}/${userInfo.Image}`)
     }
   }, [userInfo]);
 
@@ -57,7 +63,9 @@ const Profile = () => {
           toast.success("Profile Upadte successfully");
           navigate("/chat");
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -98,7 +106,24 @@ const Profile = () => {
       reader.readAsDataURL(file);
     }
   };
-  const handleDeleteImage = async (event) => {};
+  
+  const handleDeleteImage = async () => {
+
+    try {
+      const response = await apiFrontend.delete(REMOVE_PROFILE_IMAGE_ROUTE,{
+        withCredentials: true,
+      });
+      if(response.status === 200){
+        setUserInfo({...userInfo, Image: null});
+        toast.success("Image Remove !");
+        setImage(null);
+      }
+      
+    } catch (error) {
+      console.log(error)
+    }
+
+  };
 
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex justify-center items-center flex-col gap-10 ">
@@ -133,7 +158,7 @@ const Profile = () => {
             </Avatar>
             {hovered && (
               <div
-                className=" absolute inset-0 flex items-center justify-center bg-black/50 rounded-full cursor-pointer"
+                className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full cursor-pointer"
                 onClick={image ? handleDeleteImage : handleFileInputClick}
               >
                 {image ? (
@@ -153,7 +178,7 @@ const Profile = () => {
             />
           </div>
           <div className="flex min-w-32 md:min-w-64 flex-col gap-5 items-center justify-center text-white">
-            <div className="w-ful ">
+            <div className="w-full ">
               <Input
                 placeholder="Email"
                 type="email"
@@ -162,18 +187,18 @@ const Profile = () => {
                 className="rounded-lg p-6 bg-[#2c2e3b] border-none"
               />
             </div>
-            <div className="w-ful ">
+            <div className="w-full ">
               <Input
-                placeholder="First name"
+                placeholder="First Name"
                 type="text"
                 onChange={(e) => setFirstName(e.target.value)}
                 value={firstName}
                 className="rounded-lg p-6 bg-[#2c2e3b] border-none"
               />
             </div>
-            <div className="w-ful ">
+            <div className="w-full ">
               <Input
-                placeholder="Last name"
+                placeholder="Last Name"
                 type="text"
                 onChange={(e) => setLastName(e.target.value)}
                 value={lastName}

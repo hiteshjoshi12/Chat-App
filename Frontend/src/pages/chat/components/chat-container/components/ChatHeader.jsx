@@ -1,5 +1,6 @@
 import { getColor } from "@/lib/utils";
 import { useAppStore } from "@/store";
+import { HOST } from "@/utils/constants";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { RiCloseFill } from "react-icons/ri";
 const ChatHeader = () => {
@@ -10,11 +11,11 @@ const ChatHeader = () => {
         <div className="flex gap-3 items-center justify-center">
           <div className="w-12 h-12 relative">
             <Avatar className="w-12 h-12 rouded-full overflow-hidden">
-              {selectedChatData.image ? (
+              {selectedChatData.Image ? (
                 <AvatarImage
-                  src={image}
+                  src={`${HOST}/${selectedChatData.Image}`}
                   alt="profile"
-                  className="object-cover w-full h-full bg-black"
+                  className="object-cover rounded-full w-full h-full bg-black"
                 />
               ) : (
                 <div
