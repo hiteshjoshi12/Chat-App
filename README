@@ -1,1 +1,23 @@
-#Chat-App
+ MERN Stack Chat App: A real-time chat application built with the MERN stack to provide seamless messaging functionality.
+
+About The Project:
+A real-time chat application built with the MERN stack (MongoDB, Express.js, React.js, and Node.js) to provide seamless messaging functionality. This app includes features like user authentication, private messaging, and responsive design.
+
+Built With:
+Major frameworks/libraries used.
+React
+Express
+shadcn
+Tailwind
+MongoDB
+Socket.io
+
+Prerequisites:
+Ensure you have the following installed on your system: Node.js && MongoDB
+
+Installation:
+Clone the repo
+Install NPM packages
+RUN BACKEND
+RUN FRONTEND
+
